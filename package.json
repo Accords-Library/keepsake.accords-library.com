@@ -1,0 +1,26 @@
+{
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "db:push": "astro db push",
+    "dev": "astro dev --remote",
+    "build": "astro build --remote",
+    "preview": "astro preview --remote",
+    "astro": "astro",
+    "prettier": "NODE_OPTIONS=\"--experimental-strip-types\" prettier . --write",
+    "lint": "astro check",
+    "precommit": "npm run db:push && npm run prettier && npm run lint && npm run build"
+  },
+  "dependencies": {
+    "@astrojs/db": "^0.18.3",
+    "@astrojs/node": "^9.5.1",
+    "astro": "^5.16.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.6",
+    "prettier": "3.7.3",
+    "prettier-plugin-astro": "0.14.1",
+    "typescript": "5.9.3"
+  }
+}

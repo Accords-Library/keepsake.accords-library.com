@@ -1,0 +1,37 @@
+---
+interface Props {
+  content: string;
+  createdBy: string;
+  createdAt: Date;
+}
+
+const { content, createdBy, createdAt } = Astro.props;
+---
+
+<blockquote>
+  <p>{content}</p>
+  <p class="created-by">— {createdBy}</p>
+  <p class="created-at">{createdAt.toLocaleDateString()} {createdAt.toLocaleTimeString()}</p>
+</blockquote>
+
+<style>
+  blockquote {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid canvasText;
+    border-radius: 8px;
+
+    & .created-by {
+      text-align: right;
+    }
+
+    & .created-at {
+      text-align: right;
+      font-size: 0.8rem;
+      color: color-mix(in srgb, canvasText 50%, transparent);
+    }
+  }
+</style>

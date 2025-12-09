@@ -1,0 +1,38 @@
+---
+import DeleteIcon from "@/assets/icons/material-symbols--delete.svg";
+import Button from "@/components/button.astro";
+
+interface Props {
+  referrer: string;
+  disabled?: boolean;
+}
+
+const { referrer, disabled = false } = Astro.props;
+---
+
+<Button
+  action="delete-referrer"
+  data-referrer={referrer}
+  text="Delete"
+  icon={DeleteIcon}
+  color="red"
+  disabled={disabled}
+/>
+
+<script>
+  import { actions } from "astro:actions";
+  document
+    .querySelectorAll("button[data-action='delete-referrer']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const referrer = button.getAttribute("data-referrer");
+        if (!referrer) {
+          console.error("Referrer not found");
+          return;
+        }
+        await actions.deleteReferrer({ referrer });
+        window.location.reload();
+      });
+    });
+</script>

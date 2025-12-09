@@ -1,0 +1,34 @@
+---
+import Page from "@/components/page.astro";
+import BackButton from "@/components/back-button.astro";
+import PageTitle from "@/components/page-title.astro";
+import CommentList from "@/components/comment-list.astro";
+import ReferrerList from "@/components/referrer-list.astro";
+---
+
+<Page>
+  <BackButton />
+  <PageTitle title="Admin dashboard" />
+  
+  <h2>Comments</h2>
+  <CommentList />
+
+  <h2>Referrers</h2>
+  <p>
+    Referrers are used to track where comments are coming from. You can enable
+    auto-approval for a referrer to automatically approve comments from that
+    referrer.
+  </p>
+  <ReferrerList />
+</Page>
+
+<style>
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import { db, Comments } from "astro:db";
+import Page from "@/components/page.astro";
+import PageTitle from "@/components/page-title.astro";
+import Comment from "@/components/comment.astro";
+import EditIcon from "@/assets/icons/material-symbols--edit.svg";
+
+const comments = await db.select().from(Comments);
+const approvedComments = comments
+  .filter((comment) => comment.status === "approved")
+  .sort((a, b) => {
+    return a.createdAt.getTime() - b.createdAt.getTime();
+  });
+---
+
+<Page>
+  <PageTitle title="Messages" />
+  <div class="comments">
+    {
+      approvedComments.map((comment) => (
+        <Comment
+          content={comment.content}
+          createdBy={comment.createdBy}
+          createdAt={comment.createdAt}
+        />
+      ))
+    }
+  </div>
+  <a href="/write"><button><EditIcon /> Write a comment</button></a>
+</Page>
+
+<style>
+  button {
+    margin-top: 2rem;
+    display: inline-flex;
+    place-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: canvasText;
+    font-weight: 600;
+    background: none;
+    cursor: pointer;
+    border: 1px solid canvasText;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 100%;
+    text-transform: uppercase;
+    color: canvasText;
+    background-color: color-mix(in srgb, canvasText 20%, transparent);
+    transition: background-color 100ms ease;
+
+    &:hover {
+      background-color: color-mix(in srgb, canvasText 40%, transparent);
+    }
+
+    width: fit-content;
+  }
+
+  .comments {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 2rem;
+  }
+</style>

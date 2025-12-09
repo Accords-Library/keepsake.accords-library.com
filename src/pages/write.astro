@@ -1,0 +1,154 @@
+---
+import Page from "@/components/page.astro";
+import SendIcon from "@/assets/icons/material-symbols--send.svg";
+import BackButton from "@/components/back-button.astro";
+import PageTitle from "@/components/page-title.astro";
+---
+
+<Page>
+  <BackButton />
+  <PageTitle title="Write a comment" />
+  <div id="comment-form">
+    <input type="text" name="createdBy" placeholder="Name" required />
+    <textarea name="content" placeholder="Comment" required maxlength="500"></textarea>
+    <p id="content-length">0 / 500</p>
+    <button data-action="comment">
+      <SendIcon />
+      Submit
+    </button>
+  </div>
+</Page>
+
+<script>
+  import { actions } from "astro:actions";
+
+  const buttonElem = document.querySelector("button[data-action='comment']");
+  const createdByElem = document.querySelector(
+    "[name='createdBy']",
+  ) as HTMLInputElement;
+  const contentElem = document.querySelector(
+    "[name='content']",
+  ) as HTMLInputElement;
+  const contentLengthElem = document.querySelector(
+    "#content-length",
+  ) as HTMLParagraphElement;
+
+  const referrer = document.cookie.split("; ").find((row) => row.startsWith("referrer="))?.split("=")[1];
+
+  if (!buttonElem) {
+    console.error("Button not found");
+  }
+
+  if (!createdByElem) {
+    console.error("Created by not found");
+  }
+
+  if (!contentElem) {
+    console.error("Content not found");
+  }
+
+  if (referrer) {
+    console.log("Referrer found", referrer);
+  } else {
+    console.log("Referrer not found");
+  }
+  
+  const updateContentLength = () => {
+    contentLengthElem.textContent = `${contentElem.value.length} / 500`;
+    if (contentElem.value.length >= 500) {
+      contentLengthElem.style.color = "red";
+    } else {
+      contentLengthElem.style.color = "unset";
+    }
+  };
+
+  updateContentLength();
+  contentElem?.addEventListener("input", updateContentLength);
+
+  // Prevent new lines from being entered from both keydown and input events
+  contentElem?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  });  
+  contentElem?.addEventListener("input", (event) => {
+    if ((event.target as HTMLTextAreaElement).value.includes("\n")) {
+      const elem = (event.target as HTMLTextAreaElement);
+      elem.value = elem.value.replaceAll("\n", "");
+      updateContentLength();
+    }
+  });
+
+  buttonElem?.addEventListener("click", async (event) => {
+    const referrer = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("referrer="))
+      ?.split("=")[1];
+
+    const createdBy = createdByElem.value;
+    const content = contentElem.value;
+
+    if (!createdBy || !content) {
+      console.error("Created by or content not found");
+      return;
+    }
+
+    event.preventDefault();
+    if (createdByElem && contentElem) {
+      await actions.submitComment({
+        createdBy,
+        content,
+        referrer,
+      });
+      window.location.href = "/";
+    }
+  });
+</script>
+
+<style>
+  #content-length {
+    text-align: right;
+    font-size: 0.8rem;
+    opacity: 0.6;
+  }
+
+  #comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    input[type="text"] {
+      max-width: 300px;
+    }
+
+    textarea {
+      height: 200px;
+      width: 100%;
+      resize: vertical;
+    }
+  }
+
+  button {
+    display: inline-flex;
+    place-items: center;
+    gap: 4px;
+    background: none;
+    cursor: pointer;
+    border: 1px solid canvasText;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 100%;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: canvasText;
+    background-color: color-mix(in srgb, canvasText 20%, transparent);
+    transition: background-color 100ms ease;
+
+    &:hover {
+      background-color: color-mix(in srgb, canvasText 40%, transparent);
+    }
+
+    width: fit-content;
+  }
+</style>

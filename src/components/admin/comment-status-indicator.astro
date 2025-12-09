@@ -1,0 +1,29 @@
+---
+import CheckCircleIcon from "@/assets/icons/material-symbols--check-circle.svg";
+import CancelIcon from "@/assets/icons/material-symbols--cancel.svg";
+import PauseCircleIcon from "@/assets/icons/material-symbols--pause-circle.svg";
+
+interface Props {
+  status: "pending" | "approved" | "rejected";
+}
+
+const { status } = Astro.props;
+---
+
+<span data-status={status} title={
+  status === "approved"
+    ? "This comment has been approved"
+    : status === "rejected"
+      ? "This comment has been rejected"
+      : "This comment is waiting for approval"
+}>
+  {
+    status === "approved" ? (
+      <CheckCircleIcon style="color: lime;" />
+    ) : status === "rejected" ? (
+      <CancelIcon style="color: orangered;" />
+    ) : (
+      <PauseCircleIcon style="color: orange;" />
+    )
+  }
+</span>

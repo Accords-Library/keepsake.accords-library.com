@@ -1,0 +1,36 @@
+---
+import DeleteIcon from "@/assets/icons/material-symbols--delete.svg";
+import Button from "@/components/button.astro";
+
+interface Props {
+  commentId: number;
+}
+
+const { commentId } = Astro.props;
+---
+
+<Button
+  action="delete-comment"
+  data-comment-id={commentId}
+  text="Delete"
+  icon={DeleteIcon}
+  color="red"
+/>
+
+<script>
+  import { actions } from "astro:actions";
+  document
+    .querySelectorAll("button[data-action='delete-comment']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const commentId = button.getAttribute("data-comment-id");
+        if (!commentId) {
+          console.error("Comment ID not found");
+          return;
+        }
+        await actions.deleteComment({ id: parseInt(commentId) });
+        window.location.reload();
+      });
+    });
+</script>

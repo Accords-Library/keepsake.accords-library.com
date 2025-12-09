@@ -1,0 +1,38 @@
+---
+import CancelIcon from "@/assets/icons/material-symbols--cancel.svg";
+import Button from "@/components/button.astro";
+
+interface Props {
+  commentId: number;
+  disabled?: boolean;
+}
+
+const { commentId, disabled = false } = Astro.props;
+---
+
+<Button
+  action="reject-comment"
+  data-comment-id={commentId}
+  text="Reject"
+  icon={CancelIcon}
+  color="orangered"
+  disabled={disabled}
+/>  
+
+<script>
+  import { actions } from "astro:actions";
+  document
+    .querySelectorAll("button[data-action='reject-comment']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const commentId = button.getAttribute("data-comment-id");
+        if (!commentId) {
+          console.error("Comment ID not found");
+          return;
+        }
+        await actions.rejectComment({ id: parseInt(commentId) });
+        window.location.reload();
+      });
+    });
+</script>

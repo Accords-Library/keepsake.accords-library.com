@@ -1,0 +1,65 @@
+---
+import CheckCircleIcon from "@/assets/icons/material-symbols--check-circle.svg";
+import CancelIcon from "@/assets/icons/material-symbols--cancel.svg";
+import { db, Referrers } from "astro:db";
+import ToggleAutoApproveButton from "./admin/toggle-auto-approve-button.astro";
+import DeleteReferrerButton from "./admin/delete-referrer-button.astro";
+import CreateReferrerRow from "./admin/create-referrer-row.astro";
+import CopyReferrerLinkButton from "./admin/copy-referrer-link-button.astro";
+
+const referrers = await db.select().from(Referrers);
+---
+
+<table data-component="referrer-list">
+  <thead>
+    <tr>
+      <th>Referrer</th>
+      <th>Auto-approve</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      referrers.map(({ referrer, autoApprove }) => (
+        <tr>
+          <td>{referrer}</td>
+          <td>
+            {autoApprove ? (
+              <CheckCircleIcon style="color: lime;" />
+            ) : (
+              <CancelIcon style="color: red;" />
+            )}
+          </td>
+          <td>
+            <CopyReferrerLinkButton referrer={referrer} />
+            <ToggleAutoApproveButton
+              referrer={referrer}
+              autoApprove={autoApprove}
+            />
+            <DeleteReferrerButton referrer={referrer} />
+          </td>
+        </tr>
+      ))
+    }
+    <CreateReferrerRow />
+  </tbody>
+</table>
+
+<style is:global>
+  table[data-component="referrer-list"] {
+    width: 100%;
+    border-collapse: collapse;
+
+    & th {
+      text-align: center;
+      background-color: color-mix(in srgb, canvasText 20%, transparent);
+      color: CanvasText;
+    }
+
+    & th,
+    & td {
+      border: 1px solid canvasText;
+      padding: 8px;
+    }
+  }
+</style>

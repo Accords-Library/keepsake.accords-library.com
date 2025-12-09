@@ -1,0 +1,103 @@
+---
+import { db, Comments } from "astro:db";
+import DeleteCommentButton from "@/components/admin/delete-comment-button.astro";
+import ApproveCommentButton from "@/components/admin/approve-comment-button.astro";
+import RejectCommentButton from "@/components/admin/reject-comment-button.astro";
+import CommentStatusIndicator from "@/components/admin/comment-status-indicator.astro";
+
+const comments = await db.select().from(Comments);
+---
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Content</th>
+      <th>Created By</th>
+      <th>Created At</th>
+      <th>Referrer</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      comments.map((comment) => (
+        <tr>
+          <td>
+            <CommentStatusIndicator status={comment.status} />
+          </td>
+          <td>{comment.content}</td>
+          <td>{comment.createdBy}</td>
+          <td>{comment.createdAt.toLocaleDateString()} {comment.createdAt.toLocaleTimeString()}</td>
+          <td>{comment.referrer}</td>
+          <td>
+            <ApproveCommentButton commentId={comment.id} disabled={comment.status === "approved"} />
+            <RejectCommentButton commentId={comment.id} disabled={comment.status === "rejected"} />
+            <DeleteCommentButton commentId={comment.id} />
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  th,
+  td {
+    border: 1px solid canvasText;
+    padding: 8px;
+
+    &:first-child {
+      width: 24px;
+    }
+
+    &:last-child {
+      width: 350px;
+    }
+  }
+  th {
+    background-color: color-mix(in srgb, canvasText 20%, transparent);
+    color: CanvasText;
+  }
+
+  button {
+    background: none;
+    cursor: pointer;
+
+    --color: color-mix(in srgb, canvasText 40%, Canvas);
+
+    border-radius: 9999px;
+    padding-left: 4px;
+    padding-block: 4px;
+    padding-right: 12px;
+    border: 1px solid rgb(var(--color));
+    color: var(--color);
+    background-color: color-mix(in srgb, var(--color) 20%, transparent);
+    font-weight: 600;
+    font-size: 100%;
+    text-transform: uppercase;
+
+    display: inline-flex;
+    place-items: center;
+    gap: 4px;
+
+    transition: background-color 100ms ease;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--color) 40%, transparent);
+    }
+  }
+</style>

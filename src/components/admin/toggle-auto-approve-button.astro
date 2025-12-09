@@ -1,0 +1,36 @@
+---
+import PersonCheckIcon from "@/assets/icons/material-symbols--person-check.svg";
+import Button from "@/components/button.astro";
+
+interface Props {
+  referrer: string;
+  autoApprove: boolean;
+}
+
+const { referrer } = Astro.props;
+---
+
+<Button
+  action="toggle-auto-approve"
+  data-referrer={referrer}
+  text={"Toggle Auto-approve"}
+  icon={PersonCheckIcon}
+/>
+
+<script>
+  import { actions } from "astro:actions";
+  document
+    .querySelectorAll("button[data-action='toggle-auto-approve']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const referrer = button.getAttribute("data-referrer");
+        if (!referrer) {
+          console.error("Referrer not found");
+          return;
+        }
+        await actions.toggleAutoApprove({ referrer });
+        window.location.reload();
+      });
+    });
+</script>

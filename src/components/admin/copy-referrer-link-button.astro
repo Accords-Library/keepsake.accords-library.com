@@ -1,0 +1,44 @@
+---
+import ContentCopyIcon from "@/assets/icons/material-symbols--content-copy.svg";
+import Button from "@/components/button.astro";
+
+interface Props {
+  referrer: string;
+}
+
+const { referrer } = Astro.props;
+---
+
+<Button
+  action="copy-referrer-link"
+  data-referrer={referrer}
+  text="Copy Link"
+  icon={ContentCopyIcon}
+/>
+
+<script>
+  document
+    .querySelectorAll("button[data-action='copy-referrer-link']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const referrer = button.getAttribute("data-referrer");
+
+        if (!referrer) {
+          console.error("Referrer not found");
+          return;
+        }
+
+        const url = new URL(window.location.href);
+        url.pathname = "/";
+        url.searchParams.set("referrer", referrer);
+        navigator.clipboard.writeText(url.toString());
+        
+        button.querySelector("span")!.textContent = "Copied!";
+        setTimeout(() => {
+          button.querySelector("span")!.textContent = "Copy Link";
+        }, 2000);
+      });
+    });
+</script>
+

@@ -1,0 +1,45 @@
+---
+import SendIcon from "@/assets/icons/material-symbols--send.svg";
+import Button from "@/components/button.astro";
+---
+
+<tr>
+  <td>
+    <input type="text" name="referrer" placeholder="New referrer..." />
+  </td>
+  <td>
+    <input type="checkbox" name="autoApprove" placeholder="Auto-approve" />
+  </td>
+  <td>
+    <Button action="create-referrer" text="Create Referrer" icon={SendIcon} />
+  </td>
+</tr>
+
+<script>
+  import { actions } from "astro:actions";
+
+  const inputElem = document.querySelector(
+    "input[name='referrer']",
+  ) as HTMLInputElement;
+  const checkboxElem = document.querySelector(
+    "input[name='autoApprove']",
+  ) as HTMLInputElement;
+
+  document
+    .querySelectorAll("button[data-action='create-referrer']")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        if (!inputElem || !checkboxElem) {
+          console.error("Input or checkbox not found");
+          return;
+        }
+
+        const referrer = inputElem.value;
+        const autoApprove = checkboxElem.checked;
+        await actions.createReferrer({ referrer, autoApprove });
+        window.location.reload();
+      });
+    });
+</script>

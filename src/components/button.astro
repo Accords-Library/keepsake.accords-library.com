@@ -1,0 +1,51 @@
+---
+import type { SvgComponent } from "astro/types";
+
+interface Props {
+  action: string;
+  icon?: SvgComponent;
+  text: string;
+  disabled?: boolean;
+  color?: string;
+}
+
+const { action, icon, text, disabled = false, color = "canvasText", ...rest } = Astro.props;
+const Icon = icon ? icon : null;
+---
+
+<button data-action={action} disabled={disabled} style={disabled ? "--color: CanvasText;" : `--color: ${color};`} {...rest}>
+  {Icon && <Icon />}
+  <span>{text}</span>
+</button>
+
+<style>
+  button {
+    background: none;
+    cursor: pointer;
+    border-radius: 9999px;
+    padding-left: 8px;
+    padding-block: 4px;
+    padding-right: 12px;
+    border: 1px solid rgb(var(--color));
+    color: var(--color);
+    background-color: color-mix(in srgb, var(--color) 20%, transparent);
+    font-weight: 600;
+    font-size: 100%;
+    text-transform: uppercase;
+
+    display: inline-flex;
+    place-items: center;
+    gap: 8px;
+
+    transition: background-color 100ms ease;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.2;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--color) 40%, transparent);
+    }
+  }
+</style>
