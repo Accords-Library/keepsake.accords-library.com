@@ -4,20 +4,25 @@ import NAButton from "@/components/na/button.astro";
 interface Props {
   name: string;
   text: string;
-  options: { text: string; href: string }[];
+  options: { text: string; href?: string; id?: string }[];
+  id?: string;
 }
 
-const { name, text, options } = Astro.props;
+const { name, text, options, id } = Astro.props;
 ---
 
-<div class="prompt">
+<div class="prompt" id={id}>
   <div id="options">
     {
-      options.map(({ text, href }) => (
-        <a href={href}>
-          <NAButton text={text} type="menu" />
-        </a>
-      ))
+      options.map(({ text, href, id }) =>
+        href ? (
+          <a href={href}>
+            <NAButton text={text} type="menu" id={id} />
+          </a>
+        ) : (
+          <NAButton text={text} type="menu" id={id} />
+        ),
+      )
     }
   </div>
   <div id="name">

@@ -3,6 +3,7 @@ import { db, Comments } from "astro:db";
 import Page from "@/components/page.astro";
 import Comment from "@/components/comment.astro";
 import Prompt from "@/components/na/prompt.astro";
+import { c } from "@/tools/class-utils";
 
 const comments = await db.select().from(Comments);
 const approvedComments = comments
@@ -13,10 +14,16 @@ const approvedComments = comments
 
 // Shuffle the comments
 const shuffledComments = approvedComments.sort(() => Math.random() - 0.5);
+const characterCount = approvedComments.reduce(
+  (acc, comment) => acc + comment.content.length,
+  0,
+);
+
+console.log(characterCount);
 ---
 
 <Page particles>
-  <main>
+  <main class={c({ "long-gradient": characterCount > 2500 })}>
     <section id="comments">
       {
         shuffledComments.map((comment) => (
@@ -29,20 +36,72 @@ const shuffledComments = approvedComments.sort(() => Math.random() - 0.5);
       }
     </section>
     <Prompt
+      id="prompt1"
       name="Pod 153"
       text="Pod 153 to player.\nPlease respond to this query.\nDo you have anything you would like to say to those who make NieR what it is?"
       options={[
         { text: "I have something I want to say.", href: "/e4bc9d" },
-        { text: "Nope nothing at all.", href: "/" },
+        { text: "Nope nothing at all.", id: "no-nothing-at-all" },
       ]}
+    />
+    <Prompt
+      id="prompt2"
+      name="Pod 153"
+      text="Understood. Come back later if you changed your mind."
+      options={[]}
     />
   </main>
 </Page>
 
+<script>
+  const noNothingAtAll = document.getElementById("no-nothing-at-all");
+  if (!noNothingAtAll) {
+    console.error("No nothing at all button not found");
+    throw new Error("No nothing at all button not found");
+  }
+
+  const prompt1 = document.getElementById("prompt1");
+  if (!prompt1) {
+    console.error("Prompt 1 not found");
+    throw new Error("Prompt 1 not found");
+  }
+
+  const prompt2 = document.getElementById("prompt2");
+  if (!prompt2) {
+    console.error("Prompt 2 not found");
+    throw new Error("Prompt 2 not found");
+  }
+
+  noNothingAtAll.addEventListener("click", () => {
+    prompt1.style.visibility = "hidden";
+    prompt2.style.visibility = "visible";
+  });
+</script>
+
+<style is:global>
+  #prompt1 {
+    visibility: visible;
+  }
+
+  #prompt2 {
+    visibility: hidden;
+  }
+</style>
+
 <style>
   main {
     position: relative;
-    background: linear-gradient(to bottom, transparent 100dvh, #110d00 calc(100% - 50dvh));
+    min-height: 100dvh;
+
+    background: linear-gradient(to bottom, transparent, #110d00);
+
+    &.long-gradient {
+      background: linear-gradient(
+        to bottom,
+        transparent 100dvh,
+        #110d00 calc(100% - 50dvh)
+      );
+    }
   }
 
   #comments {
