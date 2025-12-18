@@ -9,11 +9,11 @@ interface Props {
   color?: string;
 }
 
-const { action, icon, text, disabled = false, color = "canvasText", ...rest } = Astro.props;
+const { action, icon, text, disabled = false, color = "var(--color-text)", ...rest } = Astro.props;
 const Icon = icon ? icon : null;
 ---
 
-<button data-action={action} disabled={disabled} style={disabled ? "--color: CanvasText;" : `--color: ${color};`} {...rest}>
+<button data-action={action} disabled={disabled} style={disabled ? "--color: var(--color-text);" : `--color: ${color};`} {...rest}>
   {Icon && <Icon />}
   <span>{text}</span>
 </button>

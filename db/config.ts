@@ -9,6 +9,7 @@ export default defineDb({
         content: column.text(),
         createdAt: column.date(),
         createdBy: column.text(),
+        location: column.text(),
         status: column.text({ enum: ["pending", "approved", "rejected"] }),
         referrer: column.text({ default: "" }),
       },

@@ -1,0 +1,396 @@
+---
+import Page from "@/components/page.astro";
+import { locations } from "@/constants";
+import NAButton from "@/components/na/button.astro";
+---
+
+<Page background="#110d00">
+  <div class="container">
+    <div class="input-container">
+      <div>
+        <div class="name-container">
+          <label id="name-label" for="name">Name (0/20)</label>
+          <input
+            id="name-input"
+            type="text"
+            name="name"
+            maxlength="20"
+            required
+          />
+          <div></div>
+        </div>
+        <div class="message-container">
+          <label id="message-label" for="message">Message (0/500)</label>
+          <textarea
+            id="message-textarea"
+            name="message"
+            rows="4"
+            required
+            maxlength="500"></textarea>
+          <div></div>
+        </div>
+        <div class="location-container">
+          <label for="location">Location</label>
+          <select id="location-select" name="location" required>
+            {
+              locations.map((location) => (
+                <option value={location}>{location}</option>
+              ))
+            }
+          </select>
+          <div></div>
+        </div>
+      </div>
+    </div>
+    <div class="button-container">
+      <div>
+        <div></div>
+        <NAButton id="finish-button" text="Finish" />
+      </div>
+      <p class="instructions">
+        Write your message, then press「&nbsp;Finish&nbsp;」to submit.
+      </p>
+    </div>
+  </div>
+</Page>
+
+{/* Message length indicator */}
+<script>
+  const messageElem = document.querySelector(
+    "#message-textarea",
+  ) as HTMLTextAreaElement;
+  if (!messageElem) {
+    console.error("Message textarea not found");
+    throw new Error("Message textarea not found");
+  }
+
+  const updateMessageLength = () => {
+    const messageLength = messageElem.value.length;
+    const messageLabelElem = document.querySelector(
+      "#message-label",
+    ) as HTMLLabelElement;
+    if (!messageLabelElem) {
+      console.error("Message label not found");
+      return;
+    }
+    messageLabelElem.textContent = `Message (${messageLength}/500)`;
+  };
+
+  messageElem.addEventListener("input", updateMessageLength);
+  updateMessageLength();
+</script>
+
+{/* Name length indicator */}
+<script>
+  const nameInputElem = document.querySelector(
+    "#name-input",
+  ) as HTMLInputElement;
+  if (!nameInputElem) {
+    console.error("Name input not found");
+    throw new Error("Name input not found");
+  }
+
+  const updateNameLength = () => {
+    const nameLength = nameInputElem.value.length;
+    const nameLabelElem = document.querySelector(
+      "#name-label",
+    ) as HTMLLabelElement;
+    if (!nameLabelElem) {
+      console.error("Name label not found");
+      return;
+    }
+    nameLabelElem.textContent = `Name (${nameLength}/20)`;
+  };
+
+  nameInputElem.addEventListener("input", updateNameLength);
+  updateNameLength();
+</script>
+
+{/* Change Select width based on the selected option */}
+<script>
+  const locationSelectElem = document.querySelector(
+    "#location-select",
+  ) as HTMLSelectElement;
+  if (!locationSelectElem) {
+    console.error("Location select not found");
+    throw new Error("Location select not found");
+  }
+
+  const updateLocationWidth = () => {
+    const location = locationSelectElem.value;
+    // Mesure the width of the selected option based on the text content
+    // Let's create a temporary option element and measure its width
+    const tempOption = document.createElement("option");
+    tempOption.textContent = location;
+    tempOption.style.position = "absolute";
+    tempOption.style.visibility = "hidden";
+    tempOption.style.width = "fit-content";
+    document.body.appendChild(tempOption);
+    const width = tempOption.getBoundingClientRect().width;
+    document.body.removeChild(tempOption);
+    locationSelectElem.style.width = `${width + 50}px`; // Add 10px for padding
+  };
+
+  locationSelectElem.addEventListener("change", updateLocationWidth);
+  locationSelectElem.addEventListener("input", updateLocationWidth);
+  updateLocationWidth();
+</script>
+
+{/* Handle the form submission */}
+<script>
+  import { actions, isInputError } from "astro:actions";
+
+  const finishButtonElem = document.querySelector(
+    "#finish-button",
+  ) as HTMLButtonElement;
+  if (!finishButtonElem) {
+    console.error("Finish button not found");
+    throw new Error("Finish button not found");
+  }
+
+  finishButtonElem.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const nameInputElem = document.querySelector(
+      "#name-input",
+    ) as HTMLInputElement;
+    if (!nameInputElem) {
+      console.error("Name input not found");
+      throw new Error("Name input not found");
+    }
+
+    const messageElem = document.querySelector(
+      "#message-textarea",
+    ) as HTMLTextAreaElement;
+    if (!messageElem) {
+      console.error("Message textarea not found");
+      throw new Error("Message textarea not found");
+    }
+
+    const locationSelectElem = document.querySelector(
+      "#location-select",
+    ) as HTMLSelectElement;
+    if (!locationSelectElem) {
+      console.error("Location select not found");
+      throw new Error("Location select not found");
+    }
+
+    const instructionsElem = document.querySelector(
+      ".instructions",
+    ) as HTMLParagraphElement;
+    if (!instructionsElem) {
+      console.error("Instructions element not found");
+      throw new Error("Instructions element not found");
+    }
+
+    const referrer = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("referrer="))
+      ?.split("=")[1];
+
+    const name = nameInputElem.value;
+    const message = messageElem.value;
+    const location = locationSelectElem.value;
+
+    console.log("Submitting comment", { name, message, location, referrer });
+
+    const result = await actions.submitComment({
+      createdBy: name,
+      content: message,
+      location,
+      referrer,
+    });
+
+    if (isInputError(result.error) && result.error.issues.length > 0) {
+      const firstError = result.error.issues[0];
+
+      if (
+        firstError.path.includes("createdBy") &&
+        firstError.code === "too_small"
+      ) {
+        instructionsElem.textContent = "Please enter a name before submitting!";
+        instructionsElem.style.color = "#ff6c6c";
+        return;
+      }
+
+      if (
+        firstError.path.includes("content") &&
+        firstError.code === "too_small"
+      ) {
+        instructionsElem.textContent =
+          "Please enter a message before submitting!";
+        instructionsElem.style.color = "#ff6c6c";
+        return;
+      }
+    }
+
+    if (result.error) {
+      console.error("Error submitting comment", result.error);
+      instructionsElem.textContent =
+        "An error occurred while submitting your comment. Please try again later.";
+      instructionsElem.style.color = "#ff6c6c";
+      return;
+    } else {
+      window.location.href = "/success?autoApprove=" + result.data.autoApprove;
+    }
+  });
+</script>
+
+<style>
+  .instructions {
+    font-size: 130%;
+    font-weight: 400;
+    text-align: center;
+    line-height: 1.6;
+    color: #f7f0d0;
+    padding-inline: 1em;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    place-content: space-around;
+    min-height: 100dvh;
+    width: 100%;
+  }
+
+  .button-container {
+    display: flex;
+    place-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+
+    & > div {
+      width: 100%;
+      max-width: 300px;
+
+      display: flex;
+      flex-direction: row;
+
+      & > div {
+        height: 34px;
+        width: 8px;
+        background-color: transparent;
+        border-left: 10px solid #d2cbad;
+        border-right: 2px solid #d2cbad;
+        margin-right: 2rem;
+      }
+    }
+  }
+
+  .input-container {
+    border-top: 2px solid #f7f0d0;
+    border-bottom: 2px solid #f7f0d0;
+    margin: 2rem;
+    padding: 2rem;
+    display: flex;
+    place-content: center;
+
+    @media (max-width: 900px) {
+      margin: 4vw;
+      padding: 4vw;
+      padding-block: 0;
+      border-color: transparent;
+    }
+
+    & > div {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: stretch;
+      max-width: 60rem;
+      width: 100%;
+
+      @media (max-width: 900px) {
+        flex-direction: column;
+        gap: 6rem;
+      }
+    }
+  }
+
+  input,
+  textarea,
+  select {
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+
+    font-size: 100%;
+    font-weight: 500;
+    font-family: sans-serif;
+    color: #f7f0d0;
+
+    height: 100%;
+    text-align: center;
+
+    outline: 3px solid transparent;
+
+    transition:
+      background-color 100ms ease,
+      color 100ms ease,
+      outline-color 100ms ease;
+
+    &:hover {
+      background-color: #5d5a4b;
+      color: #f5efcc;
+      outline: 3px solid #5d5a4b;
+    }
+
+    &:focus {
+      outline: none;
+      color: #f0764c;
+      background-color: #f7f0d0;
+
+      outline: 3px solid #f7f0d0;
+    }
+
+    @media (max-width: 900px) {
+      min-height: 4em;
+    }
+  }
+
+  .name-container,
+  .message-container,
+  .location-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    & > div {
+      flex: 1;
+      border-bottom: 1px solid #f7f0d0;
+    }
+  }
+
+  .message-container {
+    flex: 1;
+  }
+
+  textarea {
+    resize: vertical;
+    width: 100%;
+    min-width: 250px;
+    text-align: start;
+    padding: 1em;
+    box-sizing: border-box;
+
+    @media (max-width: 900px) {
+      min-height: 150px;
+    }
+  }
+
+  select {
+    width: 150px;
+    min-width: 100%;
+    text-wrap: wrap;
+  }
+
+  label {
+    font-size: 75%;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #f7f0d0 60%, transparent);
+  }
+</style>

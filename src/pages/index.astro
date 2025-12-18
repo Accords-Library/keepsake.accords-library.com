@@ -1,9 +1,8 @@
 ---
 import { db, Comments } from "astro:db";
 import Page from "@/components/page.astro";
-import PageTitle from "@/components/page-title.astro";
 import Comment from "@/components/comment.astro";
-import EditIcon from "@/assets/icons/material-symbols--edit.svg";
+import Prompt from "@/components/na/prompt.astro";
 
 const comments = await db.select().from(Comments);
 const approvedComments = comments
@@ -11,54 +10,44 @@ const approvedComments = comments
   .sort((a, b) => {
     return a.createdAt.getTime() - b.createdAt.getTime();
   });
+
+// Shuffle the comments
+const shuffledComments = approvedComments.sort(() => Math.random() - 0.5);
 ---
 
-<Page>
-  <PageTitle title="Messages" />
-  <div class="comments">
-    {
-      approvedComments.map((comment) => (
-        <Comment
-          content={comment.content}
-          createdBy={comment.createdBy}
-          createdAt={comment.createdAt}
-        />
-      ))
-    }
-  </div>
-  <a href="/write"><button><EditIcon /> Write a comment</button></a>
+<Page particles>
+  <main>
+    <section id="comments">
+      {
+        shuffledComments.map((comment) => (
+          <Comment
+            content={comment.content}
+            createdBy={comment.createdBy}
+            location={comment.location}
+          />
+        ))
+      }
+    </section>
+    <Prompt
+      name="Pod 153"
+      text="Pod 153 to player.\nPlease respond to this query.\nDo you have anything you would like to say to those who make NieR what it is?"
+      options={[
+        { text: "I have something I want to say.", href: "/e4bc9d" },
+        { text: "Nope nothing at all.", href: "/" },
+      ]}
+    />
+  </main>
 </Page>
 
 <style>
-  button {
-    margin-top: 2rem;
-    display: inline-flex;
-    place-items: center;
-    gap: 4px;
-    text-decoration: none;
-    color: canvasText;
-    font-weight: 600;
-    background: none;
-    cursor: pointer;
-    border: 1px solid canvasText;
-    border-radius: 9999px;
-    padding: 8px 16px;
-    font-size: 100%;
-    text-transform: uppercase;
-    color: canvasText;
-    background-color: color-mix(in srgb, canvasText 20%, transparent);
-    transition: background-color 100ms ease;
-
-    &:hover {
-      background-color: color-mix(in srgb, canvasText 40%, transparent);
-    }
-
-    width: fit-content;
+  main {
+    position: relative;
+    background: linear-gradient(to bottom, transparent 100dvh, #110d00 calc(100% - 50dvh));
   }
 
-  .comments {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-    gap: 2rem;
+  #comments {
+    padding-block: 5vw;
+    z-index: 2;
+    padding-bottom: 50dvh;
   }
 </style>

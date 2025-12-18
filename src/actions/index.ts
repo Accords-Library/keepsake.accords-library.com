@@ -6,27 +6,39 @@ export const server = {
   submitComment: defineAction({
     accept: "json",
     input: z.object({
-      createdBy: z.string().min(1),
-      content: z.string().min(1),
+      createdBy: z.string().min(1).max(20),
+      content: z.string().min(1).max(500),
+      location: z.string().min(1).max(50),
       referrer: z.string().optional(),
     }),
-    handler: async (input) => {
+    handler: async (input, context) => {
       const dbReferrer = await db.select().from(Referrers).where(eq(Referrers.referrer, input.referrer ?? "")).limit(1);
       const autoApprove = dbReferrer?.[0]?.autoApprove ?? false;
       const referrer = dbReferrer?.[0]?.referrer ?? "";
-
-      if (input.content.length > 500) {
-        throw new Error("Content must be less than 500 characters");
-      }
-      input.content = input.content.replaceAll("\n", "");
       
-      await db.insert(Comments).values({
+      // Remove new lines from the content
+      input.content = input.content.replaceAll("\n", "");
+      input.createdBy = input.createdBy.replaceAll("\n", "");
+
+      // Remove extra spaces from the content
+      input.content = input.content.replaceAll("  ", " ");
+      input.content = input.content.trim();
+
+      input.createdBy = input.createdBy.replaceAll("  ", " ");
+      input.createdBy = input.createdBy.trim();
+      
+      input.location = input.location.trim();
+
+      const comment = await db.insert(Comments).values({
         createdBy: input.createdBy,
         content: input.content,
+        location: input.location,
         status: autoApprove ? "approved" : "pending",
         createdAt: new Date(),
         referrer,
       });
+
+      return { autoApprove };
     },
   }),
   approveComment: defineAction({

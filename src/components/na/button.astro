@@ -1,0 +1,88 @@
+---
+interface Props {
+  text: string;
+  id?: string;
+  type?: "primary" | "menu";
+}
+
+const { text, id, type = "primary" } = Astro.props;
+---
+
+<button id={id} data-button-type={type}>
+  <div></div>
+  {text}
+</button>
+
+<style>
+  button {
+    display: flex;
+    place-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    background: color-mix(in srgb, var(--color-text) 80%, transparent);
+    border: none;
+
+    transition:
+      background-color 100ms ease,
+      color 100ms ease,
+      translate 100ms ease;
+    cursor: pointer;
+
+    background-color: #d2cbad;
+    color: #5e5b4e;
+
+    font-size: 120%;
+    font-weight: 600;
+    letter-spacing: -2%;
+
+    width: 100%;
+
+    & > div {
+      width: 1em;
+      height: 1em;
+      background-color: #5e5b4e;
+      transition: background-color 100ms ease;
+    }
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background-color: #5d5a4b;
+      color: #f5efcc;
+      position: relative;
+      outline: none;
+
+      &[data-button-type="primary"] {
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background-color: #5d5a4b;
+        }
+
+        &::before {
+          top: -4px;
+        }
+
+        &::after {
+          bottom: -4px;
+        }
+      }
+
+      &[data-button-type="menu"] {
+        translate: -1em 0;
+      }
+
+      & > div {
+        background-color: #f5efcc;
+      }
+    }
+
+    &:disabled {
+      background-color: #6f6a57;
+      color: #646351;
+    }
+  }
+</style>

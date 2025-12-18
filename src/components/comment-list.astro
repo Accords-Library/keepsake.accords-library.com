@@ -15,6 +15,7 @@ const comments = await db.select().from(Comments);
       <th>Content</th>
       <th>Created By</th>
       <th>Created At</th>
+      <th>Location</th>
       <th>Referrer</th>
       <th>Actions</th>
     </tr>
@@ -29,6 +30,7 @@ const comments = await db.select().from(Comments);
           <td>{comment.content}</td>
           <td>{comment.createdBy}</td>
           <td>{comment.createdAt.toLocaleDateString()} {comment.createdAt.toLocaleTimeString()}</td>
+          <td>{comment.location}</td>
           <td>{comment.referrer}</td>
           <td>
             <ApproveCommentButton commentId={comment.id} disabled={comment.status === "approved"} />
@@ -53,7 +55,7 @@ const comments = await db.select().from(Comments);
 
   th,
   td {
-    border: 1px solid canvasText;
+    border: 1px solid var(--color-text);
     padding: 8px;
 
     &:first-child {
@@ -65,15 +67,15 @@ const comments = await db.select().from(Comments);
     }
   }
   th {
-    background-color: color-mix(in srgb, canvasText 20%, transparent);
-    color: CanvasText;
+    background-color: color-mix(in srgb, var(--color-text) 20%, transparent);
+    color: var(--color-text);
   }
 
   button {
     background: none;
     cursor: pointer;
 
-    --color: color-mix(in srgb, canvasText 40%, Canvas);
+    --color: color-mix(in srgb, var(--color-text) 40%, var(--color-background));
 
     border-radius: 9999px;
     padding-left: 4px;

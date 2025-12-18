@@ -2,36 +2,229 @@
 interface Props {
   content: string;
   createdBy: string;
-  createdAt: Date;
+  location: string;
 }
 
-const { content, createdBy, createdAt } = Astro.props;
+const { content, createdBy, location } = Astro.props;
+
+const randomBetween = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+};
+
+const randomDirection = () => {
+  const random = Math.random();
+  if (random < 0.25) return "alternate";
+  if (random < 0.5) return "alternate-reverse";
+  if (random < 0.75) return "normal";
+  return "reverse";
+};
+
+let processedContent = content;
+processedContent = processedContent.replaceAll(" ", " "); // Use larger spaces
+processedContent = `${createdBy} "${processedContent}" ${location}`; // Add quotes and the author name
+
+const minimumWidth = 25; // em
+const maximumWidth = 90; // em
+const contentLengthRatio = processedContent.length / 530;
+const minWeightedWidth = 30 * contentLengthRatio; // em
+const effectiveMinimumWidth = Math.max(minimumWidth, minWeightedWidth);
+const maxWidth = randomBetween(effectiveMinimumWidth, maximumWidth);
+
+const horizontalPosition = Math.random(); // 0 = left anchored, 1 = right anchored
+
+const scale = randomBetween(0.8, 1);
+const opacity = scale ** 3;
+
+const animationMultiplier = ((scale - 0.7) * 6) ** 2 * 0.1;
+const animationDuration = randomBetween(15, 30); // seconds
+const animationDelay = randomBetween(0, animationDuration); // seconds
+const animationDirection = randomDirection();
+
+const marginBottom = 1 + randomBetween(0, 3) ** 2 + "vmin";
+
+const typingSpeed = 10 + contentLengthRatio * 50;
+const typingDelay = randomBetween(0, 5); // seconds
+const typingSkip = false;
 ---
 
-<blockquote>
-  <p>{content}</p>
-  <p class="created-by">— {createdBy}</p>
-  <p class="created-at">{createdAt.toLocaleDateString()} {createdAt.toLocaleTimeString()}</p>
-</blockquote>
+<div
+  data-component="comment"
+  data-typing-speed={typingSpeed}
+  style={{
+    "--max-width": maxWidth + "em",
+    "--horizontal-position": horizontalPosition,
+    "--animation-duration": animationDuration + "s",
+    "--animation-delay": -animationDelay + "s",
+    "--animation-direction": animationDirection,
+    "--animation-multiplier": animationMultiplier,
+    "--margin-bottom": marginBottom,
+    "--opacity": opacity,
+    "--scale": scale,
+  }}
+>
+  <p class="default">{processedContent}</p>
+  <p
+    class="animated"
+    data-typing-speed={typingSpeed}
+    data-typing-delay={typingDelay}
+    data-typing-skip={typingSkip}
+  >
+  </p>
+</div>
+
+<script>
+  const characters =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!'";
+  const getRandomCharacter = () => {
+    return characters[Math.floor(Math.random() * characters.length)];
+  };
+
+  const interlacedCharacters = 1;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const textElement = entry.target.querySelector(
+            ".default",
+          ) as HTMLParagraphElement;
+          const el = entry.target.querySelector(
+            ".animated",
+          ) as HTMLParagraphElement;
+          const content = textElement.textContent;
+          const typingSpeed = parseInt(el.getAttribute("data-typing-speed")!);
+          const typingDelay = parseInt(el.getAttribute("data-typing-delay")!);
+          const typingSkip = el.getAttribute("data-typing-skip") === "true";
+
+          // Check if typewriter effect has already started
+          if (el.dataset.started === "true") return;
+          el.dataset.started = "true";
+          
+          if (typingSkip) {
+            el.textContent = content;
+            return;
+          }
+
+          setTimeout(() => {
+            // Typewriter effect.
+            let index = 0;
+
+
+            const interval = setInterval(
+              () => {
+                if (index <= content.length) {
+                  let text = content.slice(0, Math.floor(index));
+                  if (index % 1 !== 0) {
+                    text += getRandomCharacter();
+                  }
+                  el.textContent = text;
+                  index += 1 / (interlacedCharacters + 1);
+                } else {
+                  clearInterval(interval);
+                }
+              },
+              1000 / typingSpeed / (interlacedCharacters + 1),
+            );
+          }, typingDelay * 1000);
+
+          // Stop observing once animation starts
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 1,
+    },
+  );
+
+  document.querySelectorAll("[data-component='comment']").forEach((comment) => {
+    observer.observe(comment);
+  });
+</script>
 
 <style>
-  blockquote {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid canvasText;
-    border-radius: 8px;
+  [data-component="comment"] {
+    padding-inline: min(4vmin, 1em);
+    padding-block: 2vmin;
 
-    & .created-by {
-      text-align: right;
+    max-width: var(--max-width);
+    margin-left: max(
+      0px,
+      calc((100% - var(--max-width)) * var(--horizontal-position))
+    );
+
+    margin-bottom: var(--margin-bottom);
+
+    animation-delay: var(--animation-delay);
+    animation-duration: var(--animation-duration);
+    animation-name: move;
+    animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+
+    font-family: var(--font-averia-libre);
+    font-size: 140%;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+
+    display: grid;
+    grid-template-areas: "center";
+
+    opacity: var(--opacity);
+    scale: var(--scale);
+
+    & > p {
+      grid-area: center;
     }
 
-    & .created-at {
-      text-align: right;
-      font-size: 0.8rem;
-      color: color-mix(in srgb, canvasText 50%, transparent);
+    & > p.default {
+      visibility: hidden;
+      user-select: none;
+    }
+  }
+
+  @keyframes move {
+    0% {
+      translate: 0 0;
+    }
+    10% {
+      translate: calc(var(--animation-multiplier) * -5vmin)
+        calc(var(--animation-multiplier) * -5vmin);
+    }
+    20% {
+      translate: calc(var(--animation-multiplier) * -4vmin)
+        calc(var(--animation-multiplier) * 5vmin);
+    }
+    30% {
+      translate: calc(var(--animation-multiplier) * -2vmin)
+        calc(var(--animation-multiplier) * 8vmin);
+    }
+    40% {
+      translate: calc(var(--animation-multiplier) * 0vmin)
+        calc(var(--animation-multiplier) * 10vmin);
+    }
+    50% {
+      translate: calc(var(--animation-multiplier) * 3vmin)
+        calc(var(--animation-multiplier) * 2vmin);
+    }
+    60% {
+      translate: calc(var(--animation-multiplier) * 0vmin)
+        calc(var(--animation-multiplier) * -3vmin);
+    }
+    70% {
+      translate: calc(var(--animation-multiplier) * 5vmin)
+        calc(var(--animation-multiplier) * -5vmin);
+    }
+    80% {
+      translate: calc(var(--animation-multiplier) * 8vmin)
+        calc(var(--animation-multiplier) * -2vmin);
+    }
+    90% {
+      translate: calc(var(--animation-multiplier) * 4vmin)
+        calc(var(--animation-multiplier) * 2vmin);
+    }
+    100% {
+      translate: 0 0;
     }
   }
 </style>

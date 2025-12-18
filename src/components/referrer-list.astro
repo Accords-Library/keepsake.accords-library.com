@@ -52,13 +52,13 @@ const referrers = await db.select().from(Referrers);
 
     & th {
       text-align: center;
-      background-color: color-mix(in srgb, canvasText 20%, transparent);
-      color: CanvasText;
+      background-color: color-mix(in srgb, var(--color-text) 20%, transparent);
+      color: var(--color-text);
     }
 
     & th,
     & td {
-      border: 1px solid canvasText;
+      border: 1px solid var(--color-text);
       padding: 8px;
     }
   }

@@ -1,0 +1,22 @@
+---
+import Page from "@/components/page.astro";
+import NAPrompt from "@/components/na/prompt.astro";
+
+const searchParams = new URLSearchParams(Astro.url.search);
+const autoApprove = searchParams.get("autoApprove");
+
+const autoApproveBool = autoApprove === "true";
+---
+
+<Page background="#110d00" particles>
+  <NAPrompt
+    name="Pod 153"
+    text={autoApproveBool
+      ? "Your comment has been submitted successfully and has been automatically approved!"
+      : "Your comment has been submitted successfully and is pending approval."}
+    options={[
+      { text: "Read messages", href: "/" },
+      { text: "Write another", href: "/e4bc9d" },
+    ]}
+  />
+</Page>
