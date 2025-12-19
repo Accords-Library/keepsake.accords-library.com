@@ -31,7 +31,7 @@ const { name, text, options, id } = Astro.props;
     <div class="line"></div>
   </div>
   <div id="text">
-    {text}
+    <p>{text}</p>
     {
       Array.from({ length: 4 }).map((_, index) => (
         <div
@@ -83,7 +83,7 @@ const { name, text, options, id } = Astro.props;
       max-width: 40rem;
       padding-right: 2vw;
 
-      margin-bottom: clamp(-5rem, -60vw + 40rem, 5rem);
+      margin-bottom: clamp(-5rem, -60vw + 40rem, 2rem);
     }
 
     #name {
@@ -91,7 +91,7 @@ const { name, text, options, id } = Astro.props;
       padding: 1rem;
       width: fit-content;
       padding-left: 16vw;
-      padding-right: 2vw;
+      padding-right: calc(0.8em + 2vw);
       position: relative;
 
       font-size: 120%;
@@ -136,16 +136,22 @@ const { name, text, options, id } = Astro.props;
     #text {
       padding-top: 3rem;
       min-height: 16vh;
-      padding-bottom: 1em;
-      padding-inline: 20vw;
+      padding-bottom: 3em;
+      padding-inline: 1em;
       overflow: hidden;
 
-      font-size: 120%;
-      letter-spacing: 5%;
-      color: #f5f5f5;
-      line-height: 1.6;
       position: relative;
-      white-space: pre-line;
+      display: flex;
+      place-content: center;
+      
+      > p {
+        font-size: 120%;
+        letter-spacing: 5%;
+        color: #f5f5f5;
+        line-height: 1.6;
+        white-space: pre-line;
+        max-width: 60rem;
+      }
 
       /* Dotted background */
       background-image:
@@ -176,28 +182,28 @@ const { name, text, options, id } = Astro.props;
       animation-timing-function: ease-in-out;
       animation-delay: var(--animation-delay);
 
-      &:nth-child(5) {
+      &:nth-of-type(5) {
         top: 30%;
         left: -10%;
         rotate: 25deg;
         width: 28%;
       }
 
-      &:nth-child(6) {
+      &:nth-of-type(6) {
         top: 40%;
         left: -10%;
         rotate: 25deg;
         width: 30%;
       }
 
-      &:nth-child(7) {
+      &:nth-of-type(7) {
         bottom: 10%;
         right: -10%;
         rotate: 25deg;
         width: 28%;
       }
 
-      &:nth-child(8) {
+      &:nth-of-type(8) {
         bottom: 25%;
         right: -10%;
         rotate: 25deg;
@@ -219,23 +225,23 @@ const { name, text, options, id } = Astro.props;
       animation-timing-function: ease-in-out;
       animation-delay: var(--animation-delay);
 
-      &:nth-child(1) {
+      &:nth-of-type(1) {
         bottom: 3vh;
         left: -10vh;
       }
 
-      &:nth-child(2) {
+      &:nth-of-type(2) {
         bottom: 3vh;
         left: -10vh;
         scale: 0.9;
       }
 
-      &:nth-child(3) {
+      &:nth-of-type(3) {
         top: 3vh;
         right: -10vh;
       }
 
-      &:nth-child(4) {
+      &:nth-of-type(4) {
         top: 3vh;
         right: -10vh;
         scale: 0.9;
