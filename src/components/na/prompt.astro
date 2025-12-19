@@ -94,7 +94,7 @@ const { name, text, options, id } = Astro.props;
       padding-right: calc(0.8em + 2vw);
       position: relative;
 
-      font-size: 120%;
+      font-size: clamp(100%, 4vw, 120%);
       letter-spacing: 5%;
       color: #f5f5f5;
 
@@ -145,7 +145,7 @@ const { name, text, options, id } = Astro.props;
       place-content: center;
       
       > p {
-        font-size: 120%;
+        font-size: clamp(100%, 4vw, 120%);
         letter-spacing: 5%;
         color: #f5f5f5;
         line-height: 1.6;
