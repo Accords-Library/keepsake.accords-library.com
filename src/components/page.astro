@@ -7,6 +7,7 @@ interface Props {
   description?: string;
   particles?: boolean;
   background?: string;
+  robots?: string;
 }
 
 const {
@@ -14,6 +15,7 @@ const {
   description = "What does NieR mean to you? Leave a message for the creators and voices behind the franchise. Your words will be shared with them after the January 11, 2026 concert.",
   particles = false,
   background = "#28241e",
+  robots = "index, follow",
 } = Astro.props;
 ---
 
@@ -33,6 +35,16 @@ const {
     <meta name="og:image" content={`${import.meta.env.PUBLIC_URL}/og-image.jpg`} />
     <meta name="og:width" content="1200" />
     <meta name="og:height" content="675" />
+    <meta name="og:url" content={`${import.meta.env.PUBLIC_URL}${Astro.url.pathname}`} />
+    <meta name="og:type" content="website" />
+    <meta name="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${import.meta.env.PUBLIC_URL}/og-image.jpg`} />
+
+    <meta name="robots" content={robots} />
   </head>
   <body>
     {particles ? <Particles /> : null}
