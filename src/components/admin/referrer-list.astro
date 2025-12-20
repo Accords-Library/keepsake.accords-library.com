@@ -2,10 +2,10 @@
 import CheckCircleIcon from "@/assets/icons/material-symbols--check-circle.svg";
 import CancelIcon from "@/assets/icons/material-symbols--cancel.svg";
 import { db, Referrers } from "astro:db";
-import ToggleAutoApproveButton from "./admin/toggle-auto-approve-button.astro";
-import DeleteReferrerButton from "./admin/delete-referrer-button.astro";
-import CreateReferrerRow from "./admin/create-referrer-row.astro";
-import CopyReferrerLinkButton from "./admin/copy-referrer-link-button.astro";
+import ToggleAutoApproveButton from "@/components/admin/toggle-auto-approve-button.astro";
+import DeleteReferrerButton from "@/components/admin/delete-referrer-button.astro";
+import CreateReferrerRow from "@/components/admin/create-referrer-row.astro";
+import CopyReferrerLinkButton from "@/components/admin/copy-referrer-link-button.astro";
 
 const referrers = await db.select().from(Referrers);
 ---

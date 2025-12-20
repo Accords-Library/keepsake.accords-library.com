@@ -23,6 +23,12 @@ export default defineConfig({
         cssVariable: "--font-averia-libre",
         weights: ["300"]
       },
+      {
+        provider: fontProviders.google(),
+        name: "Zen Maru Gothic",
+        cssVariable: "--font-zen-maru-gothic",
+        weights: ["500"]
+      },
     ],
   },
 

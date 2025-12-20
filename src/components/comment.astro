@@ -162,10 +162,15 @@ const typingSkip = false;
     animation-iteration-count: infinite;
     animation-direction: alternate;
 
-    font-family: var(--font-averia-libre);
-    font-size: 140%;
+    font-family: var(--font-averia-libre), var(--font-zen-maru-gothic);
+    font-size: clamp(110%, calc(70% + 1vw), 150%);
     font-weight: 300;
     letter-spacing: -0.03em;
+    width: fit-content;
+    
+    @media (max-width: 60rem) {
+      text-align: center;
+    }
 
     display: grid;
     grid-template-areas: "center";
@@ -175,6 +180,7 @@ const typingSkip = false;
 
     & > p {
       grid-area: center;
+      line-height: 1.2;
     }
 
     & > p.default {
