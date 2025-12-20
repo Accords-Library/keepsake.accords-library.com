@@ -2,33 +2,35 @@
 import NAButton from "@/components/na/button.astro";
 
 interface Props {
+  id?: string;
   name: string;
   text: string;
   options: { text: string; href?: string; id?: string }[];
-  id?: string;
 }
 
 const { name, text, options, id } = Astro.props;
 ---
 
-<div class="prompt" id={id}>
-  <div id="options">
-    {
-      options.map(({ text, href, id }) =>
-        href ? (
-          <a href={href}>
+<div id={id} class="prompt">
+  <div class="header">
+    <div id="name">
+      {name}
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <div class="options">
+      {
+        options.map(({ text, href, id }) =>
+          href ? (
+            <a href={href}>
+              <NAButton text={text} type="menu" id={id} />
+            </a>
+          ) : (
             <NAButton text={text} type="menu" id={id} />
-          </a>
-        ) : (
-          <NAButton text={text} type="menu" id={id} />
-        ),
-      )
-    }
-  </div>
-  <div id="name">
-    {name}
-    <div class="line"></div>
-    <div class="line"></div>
+          ),
+        )
+      }
+    </div>
   </div>
   <div id="text">
     <p>{text}</p>
@@ -54,15 +56,20 @@ const { name, text, options, id } = Astro.props;
         />
       ))
     }
+    <div class="options">
+      {
+        options.map(({ text, href }) => (
+          <a href={href}>
+            <NAButton text={text} type="primary" />
+          </a>
+        ))
+      }
+    </div>
   </div>
 </div>
 
 <style>
   .prompt {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -73,30 +80,36 @@ const { name, text, options, id } = Astro.props;
       --decoration-opacity: 0.1;
     }
 
-    #options {
+    & > .header {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-self: flex-end;
+      gap: 5rem;
+      justify-content: space-between;
+      align-items: flex-end;
 
-      width: 80vw;
-      max-width: 40rem;
-      padding-right: 2vw;
+      & > .options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
 
-      margin-bottom: clamp(-5rem, -60vw + 40rem, 2rem);
+        width: 100%;
+        max-width: 40rem;
+        padding-right: 2vw;
+
+        @media (max-width: 700.5px) {
+          display: none;
+        }
+      }
     }
 
     #name {
       background-color: #22221e;
       padding: 1rem;
-      width: fit-content;
       padding-left: 16vw;
       padding-right: calc(0.8em + 2vw);
       position: relative;
 
       font-size: clamp(100%, 4vw, 120%);
       letter-spacing: 5%;
-      color: #f5f5f5;
 
       /* Dotted background */
       background-image:
@@ -134,24 +147,18 @@ const { name, text, options, id } = Astro.props;
     }
 
     #text {
+      min-height: 10em;
+      padding: max(1rem, 4vw);
+      padding-inline: clamp(1rem, 30vw - 120px, 20vw);
       padding-top: 3rem;
-      min-height: 16vh;
-      padding-bottom: 3em;
-      padding-inline: 1em;
       overflow: hidden;
 
       position: relative;
       display: flex;
+      gap: 3rem;
+      flex-direction: column;
       place-content: center;
-      
-      > p {
-        font-size: clamp(100%, 4vw, 120%);
-        letter-spacing: 5%;
-        color: #f5f5f5;
-        line-height: 1.6;
-        white-space: pre-line;
-        max-width: 60rem;
-      }
+      place-items: center;
 
       /* Dotted background */
       background-image:
@@ -168,6 +175,29 @@ const { name, text, options, id } = Astro.props;
         5px 5px;
       background-color: #22221e;
       border: 3px solid #22221e;
+
+      @media (min-width: 700.5px) {
+        padding-block: 3rem;
+      }
+
+      > p {
+        font-size: clamp(100%, 4vw, 120%);
+        letter-spacing: 5%;
+        line-height: 1.3;
+        white-space: pre-line;
+        width: 100%;
+      }
+
+      > .options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-self: stretch;
+
+        @media (min-width: 700.5px) {
+          display: none;
+        }
+      }
     }
 
     .line {

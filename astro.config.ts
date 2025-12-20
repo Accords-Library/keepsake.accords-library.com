@@ -15,19 +15,22 @@ export default defineConfig({
         provider: fontProviders.google(),
         name: "Nunito",
         cssVariable: "--font-nunito",
-        weights: ["600", "700"]
+        weights: ["600", "700"],
+        styles: ["normal"],
       },
       {
         provider: fontProviders.google(),
         name: "Averia Libre",
         cssVariable: "--font-averia-libre",
-        weights: ["300"]
+        weights: ["300"],
+        styles: ["normal"],
       },
       {
         provider: fontProviders.google(),
         name: "Zen Maru Gothic",
         cssVariable: "--font-zen-maru-gothic",
-        weights: ["500"]
+        weights: ["500"],
+        styles: ["normal"],
       },
     ],
   },

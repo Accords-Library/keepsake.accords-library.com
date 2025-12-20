@@ -9,14 +9,25 @@ const autoApproveBool = autoApprove === "true";
 ---
 
 <Page background="#110d00" particles>
-  <NAPrompt
-    name="???"
-    text={autoApproveBool
-      ? "Your comment has been submitted successfully and has been automatically approved!"
-      : "Your comment has been submitted successfully and is pending approval."}
-    options={[
-      { text: "Read messages", href: "/" },
-      { text: "Write another", href: "/e4bc9d" },
-    ]}
-  />
+  <main>
+    <NAPrompt
+      name="???"
+      text={autoApproveBool
+        ? "Your comment has been submitted successfully and has been automatically approved!"
+        : "Your comment has been submitted successfully and is pending approval."}
+      options={[
+        { text: "Read messages", href: "/" },
+        { text: "Write another", href: "/e4bc9d/messages" },
+      ]}
+    />
+  </main>
 </Page>
+
+<style>
+  main {
+    min-height: 100dvh;
+    width: 100%;
+    display: grid;
+    align-items: flex-end;
+  }
+</style>

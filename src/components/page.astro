@@ -4,11 +4,17 @@ import Particles from "./particles.astro";
 
 interface Props {
   title?: string;
+  description?: string;
   particles?: boolean;
   background?: string;
 }
 
-const { title = "Keepsake", particles = false, background = "#28241e" } = Astro.props;
+const {
+  title = "Keepsake",
+  description = "What does NieR mean to you? Leave a message for the creators and voices behind the franchise. Your words will be shared with them after the January 11, 2026 concert.",
+  particles = false,
+  background = "#28241e",
+} = Astro.props;
 ---
 
 <html lang="en" style={`background-color: ${background};`}>
@@ -21,6 +27,9 @@ const { title = "Keepsake", particles = false, background = "#28241e" } = Astro.
     <Font cssVariable="--font-averia-libre" preload />
     <Font cssVariable="--font-zen-maru-gothic" preload />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="og:title" content={title} />
+    <meta name="og:description" content={description} />
   </head>
   <body>
     {particles ? <Particles /> : null}
@@ -31,16 +40,11 @@ const { title = "Keepsake", particles = false, background = "#28241e" } = Astro.
 <style>
   body {
     margin: 0;
-    position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 100dvh;
     font-family: var(--font-nunito);
     font-weight: 700;
-  }
-
-  html {
     color: #f5f5f5;
+
+    display: flex;
   }
 </style>
 

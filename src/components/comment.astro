@@ -1,4 +1,6 @@
 ---
+import { randomBetween } from "@/tools/number-utils";
+
 interface Props {
   content: string;
   createdBy: string;
@@ -6,10 +8,6 @@ interface Props {
 }
 
 const { content, createdBy, location } = Astro.props;
-
-const randomBetween = (min: number, max: number) => {
-  return Math.random() * (max - min) + min;
-};
 
 const randomDirection = () => {
   const random = Math.random();
@@ -99,7 +97,7 @@ const typingSkip = false;
           // Check if typewriter effect has already started
           if (el.dataset.started === "true") return;
           el.dataset.started = "true";
-          
+
           if (typingSkip) {
             el.textContent = content;
             return;
@@ -108,7 +106,6 @@ const typingSkip = false;
           setTimeout(() => {
             // Typewriter effect.
             let index = 0;
-
 
             const interval = setInterval(
               () => {
@@ -167,7 +164,7 @@ const typingSkip = false;
     font-weight: 300;
     letter-spacing: -0.03em;
     width: fit-content;
-    
+
     @media (max-width: 60rem) {
       text-align: center;
     }

@@ -2,24 +2,26 @@
 import Page from "@/components/page.astro";
 import BackButton from "@/components/back-button.astro";
 import PageTitle from "@/components/page-title.astro";
-import CommentList from "@/components/comment-list.astro";
-import ReferrerList from "@/components/referrer-list.astro";
+import CommentList from "@/components/admin/comment-list.astro";
+import ReferrerList from "@/components/admin/referrer-list.astro";
 ---
 
 <Page>
-  <BackButton />
-  <PageTitle title="Admin dashboard" />
-  
-  <h2>Comments</h2>
-  <CommentList />
+  <div>
+    <BackButton />
+    <PageTitle title="Admin dashboard" />
 
-  <h2>Referrers</h2>
-  <p>
-    Referrers are used to track where comments are coming from. You can enable
-    auto-approval for a referrer to automatically approve comments from that
-    referrer.
-  </p>
-  <ReferrerList />
+    <h2>Comments</h2>
+    <CommentList />
+
+    <h2>Referrers</h2>
+    <p>
+      Referrers are used to track where comments are coming from. You can enable
+      auto-approval for a referrer to automatically approve comments from that
+      referrer.
+    </p>
+    <ReferrerList />
+  </div>
 </Page>
 
 <style>
@@ -31,4 +33,8 @@ import ReferrerList from "@/components/referrer-list.astro";
   p {
     margin-bottom: 1rem;
   }
+
+  div {
+    padding: 1rem;
+  } 
 </style>

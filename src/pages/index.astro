@@ -2,8 +2,9 @@
 import { db, Comments } from "astro:db";
 import Page from "@/components/page.astro";
 import Comment from "@/components/comment.astro";
-import Prompt from "@/components/na/prompt.astro";
-import { c } from "@/tools/class-utils";
+import PromptSuccess from "./partials/prompt-success.astro";
+import PromptOptout from "./partials/prompt-opt-out.astro";
+import PromptDefault from "./partials/prompt-default.astro";
 
 const comments = await db.select().from(Comments);
 const approvedComments = comments
@@ -14,14 +15,12 @@ const approvedComments = comments
 
 // Shuffle the comments
 const shuffledComments = approvedComments.sort(() => Math.random() - 0.5);
-const characterCount = approvedComments.reduce(
-  (acc, comment) => acc + comment.content.length,
-  0,
-);
+
+const state = Astro.cookies.get("state")?.value ?? "default";
 ---
 
 <Page particles>
-  <main class={c({ "long-gradient": characterCount > 2500 })}>
+  <main>
     <section id="comments">
       {
         shuffledComments.map((comment) => (
@@ -33,79 +32,72 @@ const characterCount = approvedComments.reduce(
         ))
       }
     </section>
-    <Prompt
-      id="prompt1"
-      name="???"
-      text="What does NieR mean to you?\nLeave a message for the creators and voices behind the franchise.\nYour words will be shared with them after the January 11, 2026 concert."
-      options={[
-        { text: "I have something I want to say.", href: "/e4bc9d" },
-        { text: "Nope nothing at all.", id: "no-nothing-at-all" },
-      ]}
-    />
-    <Prompt
-      id="prompt2"
-      name="???"
-      text="Understood. Come back later if you changed your mind."
-      options={[]}
-    />
+    {
+      state === "default" ? (
+        <PromptDefault />
+      ) : state === "opt-out" ? (
+        <PromptOptout />
+      ) : state === "success" ? (
+        <PromptSuccess />
+      ) : null
+    }
   </main>
 </Page>
 
-<script>
-  const noNothingAtAll = document.getElementById("no-nothing-at-all");
-  if (!noNothingAtAll) {
-    console.error("No nothing at all button not found");
-    throw new Error("No nothing at all button not found");
-  }
-
-  const prompt1 = document.getElementById("prompt1");
-  if (!prompt1) {
-    console.error("Prompt 1 not found");
-    throw new Error("Prompt 1 not found");
-  }
-
-  const prompt2 = document.getElementById("prompt2");
-  if (!prompt2) {
-    console.error("Prompt 2 not found");
-    throw new Error("Prompt 2 not found");
-  }
-
-  noNothingAtAll.addEventListener("click", () => {
-    prompt1.style.visibility = "hidden";
-    prompt2.style.visibility = "visible";
-  });
-</script>
-
-<style is:global>
-  #prompt1 {
-    visibility: visible;
-  }
-
-  #prompt2 {
-    visibility: hidden;
-  }
-</style>
-
 <style>
   main {
-    position: relative;
     min-height: 100dvh;
-
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
     background: linear-gradient(to bottom, transparent, #110d00 70%);
+  }
 
-    &.long-gradient {
-      background: linear-gradient(
-        to bottom,
-        transparent 100dvh,
-        #110d00 calc(100% - 50dvh)
-      );
+  #edit {
+    position: fixed;
+    bottom: 1rem;
+    right: 0;
+    background: #110d00;
+    border-top-left-radius: 9999px;
+    border-bottom-left-radius: 9999px;
+    padding-right: 1.5rem;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px 10px var(--color-background);
+
+    & > div {
+      width: 42px;
+      height: 42px;
+      margin: 6px;
+      padding: 6px;
+      box-sizing: border-box;
+      border-radius: 9999px;
+      background: var(--color-background);
     }
   }
 
   #comments {
-    padding-block: 5vw;
-    z-index: 2;
-    padding-bottom: 100dvh;
+    padding-top: 5vw;
+    padding-bottom: 5em;
     overflow: hidden;
   }
 </style>
+
+<script>
+  import { actions } from "astro:actions";
+
+  const prompt = document.getElementById("home-prompt");
+  if (prompt) {
+    const defaultOptoutButton = prompt.querySelector("#default-opt-out");
+    if (defaultOptoutButton) {
+      defaultOptoutButton.addEventListener("click", async () => {
+        await actions.setState({
+          state: "opt-out",
+          maxAge: 60 * 60 * 24 /* 1 day */,
+        });
+        const newPrompt = await fetch("/partials/prompt-opt-out");
+        const newPromptContent = await newPrompt.text();
+        prompt.innerHTML = newPromptContent;
+      });
+    }
+  }
+</script>

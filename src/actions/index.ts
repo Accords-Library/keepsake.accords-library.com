@@ -3,6 +3,20 @@ import { z } from "astro:schema";
 import { db, Comments, eq, Referrers } from "astro:db";
 
 export const server = {
+  setState: defineAction({
+    accept: "json",
+    input: z.object({
+      state: z.enum(["default", "opt-out", "success"]),
+      maxAge: z.number().optional(),
+    }),
+    handler: async (input, context) => {
+      const { state, maxAge } = input;
+      context.cookies.set("state", state, {
+        maxAge,
+        path: "/",
+      });
+    },
+  }),
   submitComment: defineAction({
     accept: "json",
     input: z.object({
@@ -12,10 +26,14 @@ export const server = {
       referrer: z.string().optional(),
     }),
     handler: async (input, context) => {
-      const dbReferrer = await db.select().from(Referrers).where(eq(Referrers.referrer, input.referrer ?? "")).limit(1);
+      const dbReferrer = await db
+        .select()
+        .from(Referrers)
+        .where(eq(Referrers.referrer, input.referrer ?? ""))
+        .limit(1);
       const autoApprove = dbReferrer?.[0]?.autoApprove ?? false;
       const referrer = dbReferrer?.[0]?.referrer ?? "";
-      
+
       // Remove new lines from the content
       input.content = input.content.replaceAll("\n", "");
       input.createdBy = input.createdBy.replaceAll("\n", "");
@@ -26,7 +44,7 @@ export const server = {
 
       input.createdBy = input.createdBy.replaceAll("  ", " ");
       input.createdBy = input.createdBy.trim();
-      
+
       input.location = input.location.trim();
 
       const comment = await db.insert(Comments).values({
@@ -100,12 +118,19 @@ export const server = {
       referrer: z.string().min(1),
     }),
     handler: async ({ referrer }) => {
-      const referrerRecord = await db.select().from(Referrers).where(eq(Referrers.referrer, referrer)).limit(1);
+      const referrerRecord = await db
+        .select()
+        .from(Referrers)
+        .where(eq(Referrers.referrer, referrer))
+        .limit(1);
       if (!referrerRecord) {
         throw new Error("Referrer not found");
       }
       const autoApprove = referrerRecord[0].autoApprove;
-      await db.update(Referrers).set({ autoApprove: !autoApprove }).where(eq(Referrers.referrer, referrer));
+      await db
+        .update(Referrers)
+        .set({ autoApprove: !autoApprove })
+        .where(eq(Referrers.referrer, referrer));
     },
-  }), 
+  }),
 };

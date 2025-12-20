@@ -9,7 +9,7 @@ export const onRequest = defineMiddleware((context, next) => {
   const referrer = context.url.searchParams.get("referrer");
   if (referrer) {
     context.cookies.set("referrer", referrer, {
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 24 * 365,
     });
     return context.redirect(context.url.pathname);
   }

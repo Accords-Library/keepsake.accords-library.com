@@ -1,0 +1,14 @@
+---
+import Prompt from "@/components/na/prompt.astro";
+export const partial = true;
+---
+
+<Prompt
+  id="home-prompt"
+  name="???"
+  text="What does NieR mean to you?\nLeave a message for the creators and voices behind the franchise.\nYour words will be shared with them after the January 11, 2026 concert."
+  options={[
+    { text: "I have something I want to say.", href: "/e4bc9d/messages" },
+    { text: "Nope nothing at all.", id: "default-opt-out" },
+  ]}
+/>

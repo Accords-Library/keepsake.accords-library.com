@@ -231,6 +231,10 @@ import NAButton from "@/components/na/button.astro";
       instructionsElem.style.color = "#ff6c6c";
       return;
     } else {
+      await actions.setState({
+        state: "success",
+        maxAge: 60 * 60 * 24 * 365 /* 1 year */,
+      });
       window.location.href = "/success?autoApprove=" + result.data.autoApprove;
     }
   });
