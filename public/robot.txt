@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /e4bc9d/messages
+Disallow: /admin
+Disallow: /success
+Disallow: /partials/*

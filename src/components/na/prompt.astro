@@ -35,7 +35,7 @@ const { name, text, options, id } = Astro.props;
   <div id="text">
     <p>{text}</p>
     {
-      Array.from({ length: 4 }).map((_, index) => (
+      Array.from({ length: 4 }).map(() => (
         <div
           class="circle"
           style={`
@@ -46,7 +46,7 @@ const { name, text, options, id } = Astro.props;
       ))
     }
     {
-      Array.from({ length: 4 }).map((_, index) => (
+      Array.from({ length: 4 }).map(() => (
         <div
           class="line"
           style={`
@@ -212,6 +212,10 @@ const { name, text, options, id } = Astro.props;
       animation-timing-function: ease-in-out;
       animation-delay: var(--animation-delay);
 
+      touch-action: none;
+      user-select: none;
+      pointer-events: none;
+
       &:nth-of-type(5) {
         top: 30%;
         left: -10%;
@@ -254,6 +258,10 @@ const { name, text, options, id } = Astro.props;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
       animation-delay: var(--animation-delay);
+
+      touch-action: none;
+      user-select: none;
+      pointer-events: none;
 
       &:nth-of-type(1) {
         bottom: 3vh;
