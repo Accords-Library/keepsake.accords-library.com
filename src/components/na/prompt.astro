@@ -5,10 +5,10 @@ interface Props {
   id?: string;
   name: string;
   text: string;
-  options: { text: string; href?: string; id?: string }[];
+  options: { text: string; href?: string; name?: string }[];
 }
 
-const { name, text, options, id } = Astro.props;
+const { id, name, text, options } = Astro.props;
 ---
 
 <div id={id} class="prompt">
@@ -20,13 +20,13 @@ const { name, text, options, id } = Astro.props;
     </div>
     <div class="options">
       {
-        options.map(({ text, href, id }) =>
+        options.map(({ text, href, name }) =>
           href ? (
             <a href={href}>
-              <NAButton text={text} type="menu" id={id} />
+              <NAButton text={text} type="menu" name={name} />
             </a>
           ) : (
-            <NAButton text={text} type="menu" id={id} />
+            <NAButton text={text} type="menu" name={name} />
           ),
         )
       }
@@ -58,11 +58,15 @@ const { name, text, options, id } = Astro.props;
     }
     <div class="options">
       {
-        options.map(({ text, href }) => (
-          <a href={href}>
-            <NAButton text={text} type="primary" />
-          </a>
-        ))
+        options.map(({ text, href, name }) =>
+          href ? (
+            <a href={href}>
+              <NAButton text={text} name={name} />
+            </a>
+          ) : (
+            <NAButton text={text} name={name} />
+          ),
+        )
       }
     </div>
   </div>

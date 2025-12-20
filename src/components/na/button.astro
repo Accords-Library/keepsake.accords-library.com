@@ -1,14 +1,15 @@
 ---
 interface Props {
+  name?: string;
   text: string;
   id?: string;
   type?: "primary" | "menu";
 }
 
-const { text, id, type = "primary" } = Astro.props;
+const { name, text, id, type = "primary" } = Astro.props;
 ---
 
-<button id={id} data-button-type={type}>
+<button id={id} data-button-type={type} data-button-name={name}>
   <div></div>
   {text}
 </button>

@@ -87,9 +87,10 @@ const state = Astro.cookies.get("state")?.value ?? "default";
 
   const prompt = document.getElementById("home-prompt");
   if (prompt) {
-    const defaultOptoutButton = prompt.querySelector("#default-opt-out");
-    if (defaultOptoutButton) {
-      defaultOptoutButton.addEventListener("click", async () => {
+    const defaultOptoutButtons = prompt.querySelectorAll("[data-button-name='opt-out']");
+    if (defaultOptoutButtons.length > 0) {
+      defaultOptoutButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
         await actions.setState({
           state: "opt-out",
           maxAge: 60 * 60 * 24 /* 1 day */,
@@ -97,6 +98,7 @@ const state = Astro.cookies.get("state")?.value ?? "default";
         const newPrompt = await fetch("/partials/prompt-opt-out");
         const newPromptContent = await newPrompt.text();
         prompt.innerHTML = newPromptContent;
+        });
       });
     }
   }
