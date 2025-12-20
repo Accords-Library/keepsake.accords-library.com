@@ -1,6 +1,7 @@
 ---
 import SendIcon from "@/assets/icons/material-symbols--send.svg";
 import Button from "@/components/button.astro";
+import { locations } from "@/constants";
 ---
 
 <tr>
@@ -9,6 +10,16 @@ import Button from "@/components/button.astro";
   </td>
   <td>
     <input type="checkbox" name="autoApprove" placeholder="Auto-approve" />
+  </td>
+  <td>
+    <select name="defaultLocation">
+      <option value="">None</option>
+      {
+        locations.map((location) => (
+          <option value={location}>{location}</option>
+        ))
+      }
+    </select>
   </td>
   <td>
     <Button action="create-referrer" text="Create Referrer" icon={SendIcon} />
@@ -24,6 +35,9 @@ import Button from "@/components/button.astro";
   const checkboxElem = document.querySelector(
     "input[name='autoApprove']",
   ) as HTMLInputElement;
+  const selectElem = document.querySelector(
+    "select[name='defaultLocation']",
+  ) as HTMLSelectElement;
 
   document
     .querySelectorAll("button[data-action='create-referrer']")
@@ -31,14 +45,19 @@ import Button from "@/components/button.astro";
       button.addEventListener("click", async (event) => {
         event.preventDefault();
 
-        if (!inputElem || !checkboxElem) {
+        if (!inputElem || !checkboxElem || !selectElem) {
           console.error("Input or checkbox not found");
           return;
         }
 
         const referrer = inputElem.value;
         const autoApprove = checkboxElem.checked;
-        await actions.createReferrer({ referrer, autoApprove });
+        const defaultLocation = selectElem.value === "" ? undefined : selectElem.value;
+        await actions.createReferrer({
+          referrer,
+          autoApprove,
+          defaultLocation,
+        });
         window.location.reload();
       });
     });

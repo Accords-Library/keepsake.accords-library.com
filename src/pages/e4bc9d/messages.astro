@@ -2,6 +2,17 @@
 import Page from "@/components/page.astro";
 import { locations } from "@/constants";
 import NAButton from "@/components/na/button.astro";
+import { db, Referrers, eq } from "astro:db";
+
+const referrer = Astro.cookies.get("referrer")?.value;
+const defaultLocation = referrer
+  ? await db
+      .select()
+      .from(Referrers)
+      .where(eq(Referrers.referrer, referrer))
+      .limit(1)
+      .then((result) => result[0]?.defaultLocation)
+  : null;
 ---
 
 <Page background="#110d00">
@@ -34,7 +45,7 @@ import NAButton from "@/components/na/button.astro";
           <select id="location-select" name="location" required>
             {
               locations.map((location) => (
-                <option value={location}>{location}</option>
+                <option value={location} selected={location === defaultLocation}>{location}</option>
               ))
             }
           </select>

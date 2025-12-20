@@ -18,6 +18,7 @@ export default defineDb({
       columns: {
         referrer: column.text({ primaryKey: true }),
         autoApprove: column.boolean({ default: false }),
+        defaultLocation: column.text({ optional: true }),
       },
     },
   },

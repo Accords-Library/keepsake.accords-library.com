@@ -200,6 +200,7 @@ export const locations = [
   "Liberia",
   "Rwanda",
   "Lesotho",
+  "NYC",
   "Neptune",
   "Mars",
   "Venus",

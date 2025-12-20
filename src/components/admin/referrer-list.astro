@@ -15,12 +15,13 @@ const referrers = await db.select().from(Referrers);
     <tr>
       <th>Referrer</th>
       <th>Auto-approve</th>
+      <th>Default Location</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {
-      referrers.map(({ referrer, autoApprove }) => (
+      referrers.map(({ referrer, autoApprove, defaultLocation }) => (
         <tr>
           <td>{referrer}</td>
           <td>
@@ -29,6 +30,9 @@ const referrers = await db.select().from(Referrers);
             ) : (
               <CancelIcon style="color: red;" />
             )}
+          </td>
+          <td>
+            {defaultLocation}
           </td>
           <td>
             <CopyReferrerLinkButton referrer={referrer} />
