@@ -19,6 +19,8 @@ const randomDirection = () => {
 
 let processedContent = content;
 processedContent = processedContent.replaceAll(" ", " "); // Use larger spaces
+// Add a space after a dot if followed by a letter
+processedContent = processedContent.replace(/\.(\w)/g, ". $1");
 processedContent = `${createdBy} “${processedContent}” ${location}`; // Add quotes and the author name
 
 const minimumWidth = 25; // em
