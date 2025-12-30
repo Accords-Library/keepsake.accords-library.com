@@ -43,7 +43,7 @@ const animationDirection = randomDirection();
 const marginBottom = 1 + randomBetween(0, 3) ** 2 + "vmin";
 
 const typingSpeed = 10 + contentLengthRatio * 50;
-const typingDelay = randomBetween(0, 5); // seconds
+const typingDelay = randomBetween(0, 2); // seconds
 const typingSkip = false;
 ---
 
@@ -85,6 +85,9 @@ const typingSkip = false;
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+          // Stop observing once animation starts
+          observer.unobserve(entry.target);
+
           const textElement = entry.target.querySelector(
             ".default",
           ) as HTMLParagraphElement;
@@ -95,10 +98,6 @@ const typingSkip = false;
           const typingSpeed = parseInt(el.getAttribute("data-typing-speed")!);
           const typingDelay = parseInt(el.getAttribute("data-typing-delay")!);
           const typingSkip = el.getAttribute("data-typing-skip") === "true";
-
-          // Check if typewriter effect has already started
-          if (el.dataset.started === "true") return;
-          el.dataset.started = "true";
 
           if (typingSkip) {
             el.textContent = content;
@@ -125,14 +124,11 @@ const typingSkip = false;
               1000 / typingSpeed / (interlacedCharacters + 1),
             );
           }, typingDelay * 1000);
-
-          // Stop observing once animation starts
-          observer.unobserve(entry.target);
         }
       });
     },
     {
-      threshold: 1,
+      threshold: 0,
     },
   );
 
