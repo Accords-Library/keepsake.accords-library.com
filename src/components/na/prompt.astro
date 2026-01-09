@@ -5,10 +5,11 @@ interface Props {
   id?: string;
   name: string;
   text: string;
+  footnote?: string;
   options: { text: string; href?: string; name?: string }[];
 }
 
-const { id, name, text, options } = Astro.props;
+const { id, name, text, footnote, options } = Astro.props;
 ---
 
 <div id={id} class="prompt">
@@ -69,6 +70,7 @@ const { id, name, text, options } = Astro.props;
         )
       }
     </div>
+    { footnote && <p class="footnote">{footnote}</p> }
   </div>
 </div>
 
@@ -157,6 +159,10 @@ const { id, name, text, options } = Astro.props;
       padding-top: 3rem;
       overflow: hidden;
 
+      &:has(.footnote) {
+        padding-bottom: 1em;
+      }
+
       position: relative;
       display: flex;
       gap: 3rem;
@@ -182,6 +188,20 @@ const { id, name, text, options } = Astro.props;
 
       @media (min-width: 700.5px) {
         padding-block: 3rem;
+      }
+
+      > .footnote {
+        font-size: 80%;
+        letter-spacing: 5%;
+        line-height: 1.3;
+        white-space: pre-line;
+        width: 100%;
+        text-align: center;
+        opacity: 0.5;
+
+        @media (max-width: 700.5px) {
+          white-space: collapse;
+        }
       }
 
       > p {
