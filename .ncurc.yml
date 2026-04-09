@@ -1,0 +1,5 @@
+upgrade: true
+interactive: true
+format: "group"
+doctor: true
+doctorTest: npm run precommit
