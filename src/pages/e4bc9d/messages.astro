@@ -45,7 +45,12 @@ const defaultLocation = referrer
           <select id="location-select" name="location" required>
             {
               locations.map((location) => (
-                <option value={location} selected={location === defaultLocation}>{location}</option>
+                <option
+                  value={location}
+                  selected={location === defaultLocation}
+                >
+                  {location}
+                </option>
               ))
             }
           </select>

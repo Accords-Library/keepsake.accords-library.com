@@ -33,7 +33,7 @@ const { referrer } = Astro.props;
         url.pathname = "/";
         url.searchParams.set("referrer", referrer);
         navigator.clipboard.writeText(url.toString());
-        
+
         button.querySelector("span")!.textContent = "Copied!";
         setTimeout(() => {
           button.querySelector("span")!.textContent = "Copy Link";
@@ -41,4 +41,3 @@ const { referrer } = Astro.props;
       });
     });
 </script>
-

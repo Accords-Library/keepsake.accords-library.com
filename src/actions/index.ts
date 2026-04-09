@@ -91,7 +91,9 @@ export const server = {
       defaultLocation: z.string().optional(),
     }),
     handler: async ({ referrer, autoApprove, defaultLocation }) => {
-      await db.insert(Referrers).values({ referrer, autoApprove, defaultLocation });
+      await db
+        .insert(Referrers)
+        .values({ referrer, autoApprove, defaultLocation });
       return { referrer };
     },
   }),

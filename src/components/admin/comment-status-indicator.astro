@@ -10,13 +10,14 @@ interface Props {
 const { status } = Astro.props;
 ---
 
-<span data-status={status} title={
-  status === "approved"
+<span
+  data-status={status}
+  title={status === "approved"
     ? "This comment has been approved"
     : status === "rejected"
       ? "This comment has been rejected"
-      : "This comment is waiting for approval"
-}>
+      : "This comment is waiting for approval"}
+>
   {
     status === "approved" ? (
       <CheckCircleIcon style="color: lime;" />
