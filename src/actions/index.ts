@@ -25,7 +25,7 @@ export const server = {
       location: z.string().min(1).max(50),
       referrer: z.string().optional(),
     }),
-    handler: async (input, context) => {
+    handler: async (input) => {
       const dbReferrer = await db
         .select()
         .from(Referrers)
@@ -47,7 +47,7 @@ export const server = {
 
       input.location = input.location.trim();
 
-      const comment = await db.insert(Comments).values({
+      await db.insert(Comments).values({
         createdBy: input.createdBy,
         content: input.content,
         location: input.location,
@@ -104,15 +104,6 @@ export const server = {
     }),
     handler: async ({ referrer }) => {
       await db.delete(Referrers).where(eq(Referrers.referrer, referrer));
-    },
-  }),
-  deleteComment: defineAction({
-    accept: "json",
-    input: z.object({
-      id: z.number(),
-    }),
-    handler: async ({ id }) => {
-      await db.delete(Comments).where(eq(Comments.id, id));
     },
   }),
   toggleAutoApprove: defineAction({

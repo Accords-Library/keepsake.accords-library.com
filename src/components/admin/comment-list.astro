@@ -1,6 +1,5 @@
 ---
 import { db, Comments } from "astro:db";
-import DeleteCommentButton from "@/components/admin/delete-comment-button.astro";
 import ApproveCommentButton from "@/components/admin/approve-comment-button.astro";
 import RejectCommentButton from "@/components/admin/reject-comment-button.astro";
 import CommentStatusIndicator from "@/components/admin/comment-status-indicator.astro";
@@ -44,7 +43,6 @@ const comments = await db.select().from(Comments);
               commentId={comment.id}
               disabled={comment.status === "rejected"}
             />
-            <DeleteCommentButton commentId={comment.id} />
           </td>
         </tr>
       ))
@@ -72,7 +70,7 @@ const comments = await db.select().from(Comments);
     }
 
     &:last-child {
-      width: 360px;
+      width: 240px;
     }
   }
   th {
