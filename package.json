@@ -11,7 +11,7 @@
     "astro": "astro",
     "prettier": "NODE_OPTIONS=\"--experimental-strip-types\" prettier . --write",
     "lint": "astro check",
-    "upgrade": "ncu",
+    "upgrade": "npx @astrojs/upgrade && ncu",
     "precommit": "npm run db:push && npm run prettier && npm run check && npm run lint && npm run build"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
+    "@astrojs/upgrade": "^0.7.1",
     "npm-check-updates": "^20.0.0",
     "prettier": "3.8.1",
     "prettier-plugin-astro": "0.14.1",
