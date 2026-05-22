@@ -15,15 +15,15 @@
     "precommit": "npm run db:push && npm run prettier && npm run check && npm run lint && npm run build"
   },
   "dependencies": {
-    "@astrojs/db": "^0.20.1",
-    "@astrojs/node": "^10.0.4",
-    "astro": "^6.1.5"
+    "@astrojs/db": "^0.21.2",
+    "@astrojs/node": "^10.1.1",
+    "astro": "^6.3.7"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/upgrade": "^0.7.1",
-    "npm-check-updates": "^20.0.0",
-    "prettier": "3.8.1",
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/upgrade": "^0.7.2",
+    "npm-check-updates": "^22.2.0",
+    "prettier": "3.8.3",
     "prettier-plugin-astro": "0.14.1",
     "typescript": "^5.9.3"
   }
