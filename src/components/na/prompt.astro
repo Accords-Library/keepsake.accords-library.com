@@ -20,55 +20,47 @@ const { id, name, text, footnote, options } = Astro.props;
       <div class="line"></div>
     </div>
     <div class="options">
-      {
-        options.map(({ text, href, name }) =>
-          href ? (
-            <a href={href}>
-              <NAButton text={text} type="menu" name={name} />
-            </a>
-          ) : (
+      {options.map(({ text, href, name }) =>
+        href ? (
+          <a href={href}>
             <NAButton text={text} type="menu" name={name} />
-          ),
-        )
-      }
+          </a>
+        ) : (
+          <NAButton text={text} type="menu" name={name} />
+        ),
+      )}
     </div>
   </div>
   <div id="text">
     <p>{text}</p>
-    {
-      Array.from({ length: 4 }).map(() => (
-        <div
-          class="circle"
-          style={`
+    {Array.from({ length: 4 }).map(() => (
+      <div
+        class="circle"
+        style={`
             --animation-delay: ${-Math.random() * 10}s;
             --animation-duration: ${20 + Math.random() * 10}s;
             `}
-        />
-      ))
-    }
-    {
-      Array.from({ length: 4 }).map(() => (
-        <div
-          class="line"
-          style={`
+      />
+    ))}
+    {Array.from({ length: 4 }).map(() => (
+      <div
+        class="line"
+        style={`
                   --animation-delay: ${-Math.random() * 10}s;
                   --animation-duration: ${20 + Math.random() * 10}s;
                   `}
-        />
-      ))
-    }
+      />
+    ))}
     <div class="options">
-      {
-        options.map(({ text, href, name }) =>
-          href ? (
-            <a href={href}>
-              <NAButton text={text} name={name} />
-            </a>
-          ) : (
+      {options.map(({ text, href, name }) =>
+        href ? (
+          <a href={href}>
             <NAButton text={text} name={name} />
-          ),
-        )
-      }
+          </a>
+        ) : (
+          <NAButton text={text} name={name} />
+        ),
+      )}
     </div>
     {footnote && <p class="footnote">{footnote}</p>}
   </div>

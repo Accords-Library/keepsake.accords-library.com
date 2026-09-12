@@ -20,33 +20,31 @@ const comments = await db.select().from(Comments);
     </tr>
   </thead>
   <tbody>
-    {
-      comments.map((comment) => (
-        <tr>
-          <td>
-            <CommentStatusIndicator status={comment.status} />
-          </td>
-          <td>{comment.content}</td>
-          <td>{comment.createdBy}</td>
-          <td>
-            {comment.createdAt.toLocaleDateString()}{" "}
-            {comment.createdAt.toLocaleTimeString()}
-          </td>
-          <td>{comment.location}</td>
-          <td>{comment.referrer}</td>
-          <td>
-            <ApproveCommentButton
-              commentId={comment.id}
-              disabled={comment.status === "approved"}
-            />
-            <RejectCommentButton
-              commentId={comment.id}
-              disabled={comment.status === "rejected"}
-            />
-          </td>
-        </tr>
-      ))
-    }
+    {comments.map((comment) => (
+      <tr>
+        <td>
+          <CommentStatusIndicator status={comment.status} />
+        </td>
+        <td>{comment.content}</td>
+        <td>{comment.createdBy}</td>
+        <td>
+          {comment.createdAt.toLocaleDateString()}{" "}
+          {comment.createdAt.toLocaleTimeString()}
+        </td>
+        <td>{comment.location}</td>
+        <td>{comment.referrer}</td>
+        <td>
+          <ApproveCommentButton
+            commentId={comment.id}
+            disabled={comment.status === "approved"}
+          />
+          <RejectCommentButton
+            commentId={comment.id}
+            disabled={comment.status === "rejected"}
+          />
+        </td>
+      </tr>
+    ))}
   </tbody>
 </table>
 

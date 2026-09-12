@@ -20,7 +20,9 @@ const defaultLocation = referrer
     <div class="input-container">
       <div>
         <div class="name-container">
-          <label id="name-label" for="name">Name (0/20)</label>
+          <label id="name-label" for="name">
+            Name (0/20)
+          </label>
           <input
             id="name-input"
             type="text"
@@ -31,28 +33,26 @@ const defaultLocation = referrer
           <div></div>
         </div>
         <div class="message-container">
-          <label id="message-label" for="message">Message (0/500)</label>
+          <label id="message-label" for="message">
+            Message (0/500)
+          </label>
           <textarea
             id="message-textarea"
             name="message"
             rows="4"
             required
-            maxlength="500"></textarea>
+            maxlength="500"
+          ></textarea>
           <div></div>
         </div>
         <div class="location-container">
           <label for="location">Location</label>
           <select id="location-select" name="location" required>
-            {
-              locations.map((location) => (
-                <option
-                  value={location}
-                  selected={location === defaultLocation}
-                >
-                  {location}
-                </option>
-              ))
-            }
+            {locations.map((location) => (
+              <option value={location} selected={location === defaultLocation}>
+                {location}
+              </option>
+            ))}
           </select>
           <div></div>
         </div>

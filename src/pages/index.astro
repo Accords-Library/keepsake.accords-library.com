@@ -22,25 +22,21 @@ const state = Astro.cookies.get("state")?.value ?? "default";
 <Page particles>
   <main>
     <section id="comments">
-      {
-        shuffledComments.map((comment) => (
-          <Comment
-            content={comment.content}
-            createdBy={comment.createdBy}
-            location={comment.location}
-          />
-        ))
-      }
+      {shuffledComments.map((comment) => (
+        <Comment
+          content={comment.content}
+          createdBy={comment.createdBy}
+          location={comment.location}
+        />
+      ))}
     </section>
-    {
-      state === "default" ? (
-        <PromptDefault />
-      ) : state === "opt-out" ? (
-        <PromptOptout />
-      ) : state === "success" ? (
-        <PromptSuccess />
-      ) : null
-    }
+    {state === "default" ? (
+      <PromptDefault />
+    ) : state === "opt-out" ? (
+      <PromptOptout />
+    ) : state === "success" ? (
+      <PromptSuccess />
+    ) : null}
   </main>
 </Page>
 

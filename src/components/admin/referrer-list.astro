@@ -20,29 +20,27 @@ const referrers = await db.select().from(Referrers);
     </tr>
   </thead>
   <tbody>
-    {
-      referrers.map(({ referrer, autoApprove, defaultLocation }) => (
-        <tr>
-          <td>{referrer}</td>
-          <td>
-            {autoApprove ? (
-              <CheckCircleIcon style="color: lime;" />
-            ) : (
-              <CancelIcon style="color: red;" />
-            )}
-          </td>
-          <td>{defaultLocation}</td>
-          <td>
-            <CopyReferrerLinkButton referrer={referrer} />
-            <ToggleAutoApproveButton
-              referrer={referrer}
-              autoApprove={autoApprove}
-            />
-            <DeleteReferrerButton referrer={referrer} />
-          </td>
-        </tr>
-      ))
-    }
+    {referrers.map(({ referrer, autoApprove, defaultLocation }) => (
+      <tr>
+        <td>{referrer}</td>
+        <td>
+          {autoApprove ? (
+            <CheckCircleIcon style="color: lime;" />
+          ) : (
+            <CancelIcon style="color: red;" />
+          )}
+        </td>
+        <td>{defaultLocation}</td>
+        <td>
+          <CopyReferrerLinkButton referrer={referrer} />
+          <ToggleAutoApproveButton
+            referrer={referrer}
+            autoApprove={autoApprove}
+          />
+          <DeleteReferrerButton referrer={referrer} />
+        </td>
+      </tr>
+    ))}
     <CreateReferrerRow />
   </tbody>
 </table>

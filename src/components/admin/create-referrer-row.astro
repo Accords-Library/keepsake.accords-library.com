@@ -14,11 +14,9 @@ import { locations } from "@/constants";
   <td>
     <select name="defaultLocation">
       <option value="">None</option>
-      {
-        locations.map((location) => (
-          <option value={location}>{location}</option>
-        ))
-      }
+      {locations.map((location) => (
+        <option value={location}>{location}</option>
+      ))}
     </select>
   </td>
   <td>

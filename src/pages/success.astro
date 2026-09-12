@@ -12,9 +12,11 @@ const autoApproveBool = autoApprove === "true";
   <main>
     <NAPrompt
       name="？？？"
-      text={autoApproveBool
-        ? "Your comment has been submitted successfully and has been automatically approved!"
-        : "Your comment has been submitted successfully and is pending approval."}
+      text={
+        autoApproveBool
+          ? "Your comment has been submitted successfully and has been automatically approved!"
+          : "Your comment has been submitted successfully and is pending approval."
+      }
       options={[
         { text: "Read messages", href: "/" },
         { text: "Write another", href: "/e4bc9d/messages" },
